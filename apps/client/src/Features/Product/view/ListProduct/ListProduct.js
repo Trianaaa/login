@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import TableProduct from "../../components/TableProduct";
 import useStoreProduct from "../../store";
+import ProductsForm from "./createProduct";
 
 const ListProduct = () => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -57,7 +58,7 @@ const ListProduct = () => {
         </Button>
       </Box>
       <CommonModal isOpen={isOpen} onClose={onClose}>
-        <h1>Modal</h1>
+        <ProductsForm onClose={onClose} />
       </CommonModal>
       <Box height={"100%"}>
         <TableProduct />

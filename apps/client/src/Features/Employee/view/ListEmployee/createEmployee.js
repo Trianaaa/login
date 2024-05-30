@@ -20,6 +20,7 @@ const EmployeeForm = ({ onClose }) => {
     cargo: "",
     salario: 0,
     id: 0,
+    cedula: "",
   });
 
   const handleChange = (e) => {
@@ -43,7 +44,7 @@ const EmployeeForm = ({ onClose }) => {
           Direccion: formValues.direccion,
           Cargo: formValues.cargo,
           Salario: Number(formValues.salario),
-          id: Number(formValues.id),
+          id: Number(formValues.cedula),
         }),
       });
     } catch (err) {
@@ -58,6 +59,7 @@ const EmployeeForm = ({ onClose }) => {
         direccion: "",
         cargo: "",
         salario: 0,
+        Cedula: "",
       });
       onClose();
     }
@@ -90,12 +92,12 @@ const EmployeeForm = ({ onClose }) => {
             />
           </FormControl>
 
-          <FormControl id="id" isRequired>
+          <FormControl id="Cedula" isRequired>
             <FormLabel>Cedula</FormLabel>
             <Input
               type="number"
-              name="id"
-              value={formValues.id}
+              name="Cedula"
+              value={formValues.Cedula}
               onChange={handleChange}
             />
           </FormControl>

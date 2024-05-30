@@ -1,4 +1,4 @@
-import ListProduct from "@/Features/Product/view/ListEmployee/ListEmployee";
+import ListProduct from "@/Features/Product/view/ListProduct/ListProduct";
 import Head from "next/head";
 
 const Home = () => {
