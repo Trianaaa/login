@@ -1,48 +1,15 @@
 import { Avatar } from "@chakra-ui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 
-export const DEFAULT_DATA = [
-  {
-    ID: 1,
-    Foto: "https://i.imgur.com/w4g1y0a.png",
-    Nombre: "Tanner",
-    Apellido: "Linsley",
-    Correo: "tanner@linsley.com",
-    Cargo: "Director",
-    Salario: 100000,
-    Direccion: "Calle de la Paz, 12",
-  },
-  {
-    ID: 2,
-    Foto: "https://i.imgur.com/w4g1y0a.png",
-    Nombre: "Tanner",
-    Apellido: "Linsley",
-    Correo: "tanner@linsley.com",
-    Cargo: "Director",
-    Salario: 100000,
-    Direccion: "Calle de la Paz, 12",
-  },
-  {
-    ID: 3,
-    Foto: "https://i.imgur.com/w4g1y0a.png",
-    Nombre: "Tanner",
-    Apellido: "Linsley",
-    Correo: "tanner@linsley.com",
-    Cargo: "Director",
-    Salario: 100000,
-    Direccion: "Calle de la Paz, 12",
-  },
-];
-
 const columnHelper = createColumnHelper();
 
 export const columns = [
   columnHelper.display({
-    id: "Serial",
+    id: "ID",
     header: () => "Serial",
     cell: (info) => info.row.original._id,
   }),
-  columnHelper.accessor("Foto", {
+  columnHelper.accessor("Imagen", {
     cell: (info) => (
       <>
         <Avatar src={info.getValue()} size="sm" />
@@ -52,29 +19,26 @@ export const columns = [
   columnHelper.accessor("Nombre", {
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor((row) => row.Apellido, {
-    id: "Apellido",
+  columnHelper.accessor((row) => row.Categoria, {
+    id: "Categoria",
     cell: (info) => <i>{info.getValue()}</i>,
-    header: () => <span>Apellido</span>,
+    header: () => <span>Categoria</span>,
   }),
-  columnHelper.accessor("Correo", {
-    header: "Correo",
+  columnHelper.accessor("Modelo", {
+    header: "Modelo",
   }),
-  columnHelper.accessor("Cargo", {
-    header: () => "Cargo",
+  columnHelper.accessor("Serie", {
+    header: () => "Serie",
     cell: (info) => info.renderValue(),
   }),
-  columnHelper.accessor("Salario", {
-    header: () => <span>Salario</span>,
-    cell: (info) => {
-      const formatter = new Intl.NumberFormat("es-CO", {
-        style: "currency",
-        currency: "COP",
-      });
-      return formatter.format(info.getValue());
-    },
+  columnHelper.accessor("Marca", {
+    header: () => <span>Marca</span>,
+    cell: (info) => info.renderValue(),
   }),
-  columnHelper.accessor("Direccion", {
-    header: "Dirección",
+  columnHelper.accessor("Fabricante", {
+    header: "Fabricante",
+  }),
+  columnHelper.accessor("id_Empleado", {
+    header: "id_Empleado",
   }),
 ];
