@@ -1,12 +1,6 @@
-import {
-  Box,
-  Button,
-  Heading,
-  Modal,
-  ModalContent,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react";
+import CommonModal from "@/Components/CommonModal/CommonModal";
+import { Box, Button, Heading, useDisclosure } from "@chakra-ui/react";
+import { useRouter } from "next/dist/client/router";
 import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import TableEmployee from "../../components/TableEmployee";
@@ -38,6 +32,10 @@ const ListEmployee = () => {
 
   // Modal
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
+  const goToProducts = () => {
+    router.push("/products");
+  };
 
   return (
     <Box p={4} height="100vh" display="flex" flexDirection="column" gap={2}>
@@ -55,20 +53,13 @@ const ListEmployee = () => {
         <Button colorScheme="green" onClick={onOpen}>
           Crear nuevo empleado
         </Button>
-        <Button colorScheme="red">Ver productos</Button>
+        <Button onClick={goToProducts} colorScheme="red">
+          Ver productos
+        </Button>
       </Box>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-        size="2xl"
-        scrollBehavior="inside"
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <EmployeeForm onClose={onClose} />
-        </ModalContent>
-      </Modal>
+      <CommonModal isOpen={isOpen} onClose={onClose}>
+        <EmployeeForm onClose={onClose} />
+      </CommonModal>
       <Box height={"100%"}>
         <TableEmployee />
       </Box>
