@@ -50,3 +50,19 @@ node_modules
 
 # Next.js
 .next
+
+# ALL NODEMODULES
+node_modules
+node_modules/*
+node_modules/**/*
+/node_modules/
+/node_modules
+
+# ALL NODEMODULES IN THE ROOT
+node_modules
+node_modules/*
+node_modules/**/*
+
+# ALL NODEMODULES IN THE ROOT
+package-lock.json
+package-lock.json

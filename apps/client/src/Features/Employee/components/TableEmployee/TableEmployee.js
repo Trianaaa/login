@@ -1,10 +1,10 @@
 import Table from "@/Components/Table";
 import { Box } from "@chakra-ui/react";
-import React from "react";
-import { DEFAULT_DATA, columns } from "./columns";
+import useStoreEmployee from "../../store";
+import { columns } from "./columns";
 
 const TableEmployee = () => {
-  const [data, setData] = React.useState(() => [...DEFAULT_DATA]);
+  const { data, setData } = useStoreEmployee();
   return (
     <Box height={"100%"}>
       <Table data={data} columns={columns} />
