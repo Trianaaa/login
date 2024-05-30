@@ -14,6 +14,6 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(3002);
+  await app.listen(3002); // !important this need to be diferent to 3000 beacouse frontend is on 3000
 }
 bootstrap();
