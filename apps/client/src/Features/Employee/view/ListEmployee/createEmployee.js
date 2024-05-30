@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
 import {
   Box,
   Button,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Stack,
-  Heading,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
-const EmployeeForm = () => {
+const EmployeeForm = ({ onClose }) => {
   const [formValues, setFormValues] = useState({
-    nombre: '',
-    apellido: '',
-    foto: '',
-    correo: '',
-    direccion: '',
-    cargo: '',
+    nombre: "",
+    apellido: "",
+    foto: "",
+    correo: "",
+    direccion: "",
+    cargo: "",
     salario: 0,
   });
 
@@ -28,33 +29,44 @@ const EmployeeForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch('http://localhost:3002/employee', {
-        method: 'POST',
+      await fetch("http://localhost:3002/employee/new", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formValues),
+        body: JSON.stringify({
+          Nombre: formValues.nombre,
+          Apellido: formValues.apellido,
+          Foto: formValues.foto,
+          Correo: formValues.correo,
+          Direccion: formValues.direccion,
+          Cargo: formValues.cargo,
+          Salario: Number(formValues.salario),
+          id: 1,
+        }),
       });
-      alert('Empleado creado correctamente');
     } catch (err) {
       console.error(err);
-      alert('Error al crear empleado');
     } finally {
+      toast.success("Empleado creado correctamente");
       setFormValues({
-        nombre: '',
-        apellido: '',
-        foto: '',
-        correo: '',
-        direccion: '',
-        cargo: '',
+        nombre: "",
+        apellido: "",
+        foto: "",
+        correo: "",
+        direccion: "",
+        cargo: "",
         salario: 0,
       });
+      onClose();
     }
   };
 
   return (
-    <Box maxW="md" mx="auto" mt={8}>
-      <Heading mb={6} textAlign="center">Formulario de Empleado</Heading>
+    <Box maxW="md" mx="auto" my={8} py={4}>
+      <Heading mb={6} textAlign="center">
+        Formulario de Empleado
+      </Heading>
       <form onSubmit={handleSubmit}>
         <Stack spacing={4}>
           <FormControl id="nombre" isRequired>
@@ -127,7 +139,12 @@ const EmployeeForm = () => {
             />
           </FormControl>
 
-          <Button type="submit" colorScheme="teal" size="md" onClick={handleSubmit}>
+          <Button
+            type="submit"
+            colorScheme="teal"
+            size="md"
+            onClick={handleSubmit}
+          >
             Enviar
           </Button>
         </Stack>
