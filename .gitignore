@@ -41,3 +41,12 @@ apps/client/.next
 node_modules
 /node_modules/
 /node_modules
+
+# Turbo
+.turbo
+
+# Vscode
+.vscode
+
+# Next.js
+.next
