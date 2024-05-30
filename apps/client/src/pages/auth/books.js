@@ -41,7 +41,7 @@ const Books = () => {
 
   const getBooks = async () => {
     try {
-      const res = await fetch("http://localhost:3080/book");
+      const res = await fetch("http://localhost:3000/book");
       const data = await res.json();
       setBooks(data);
     } catch (err) {
@@ -51,7 +51,7 @@ const Books = () => {
 
   const deleteBook = async (bookId) => {
     try {
-      await fetch(`http://localhost:3080/book/${bookId}`, {
+      await fetch(`http://localhost:3000/book/${bookId}`, {
         method: "DELETE",
       });
       getBooks();
@@ -74,7 +74,7 @@ const Books = () => {
 
   const saveEditedBook = async () => {
     try {
-      await fetch(`http://localhost:3080/book/${selectedBook._id}`, {
+      await fetch(`http://localhost:3000/book/${selectedBook._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -59,7 +59,7 @@ const Inicio = () => {
       <Card className="w-1/2">
         {" "}
         <div className="flex justify-center items-center flex-col gap-6">
-          <h1 className="text-center text-4xl font-bold">Registro de libros</h1>
+          <h1 className="text-center text-4xl font-bold">Registros de equipos</h1>
 
           <div className="flex flex-col justify-center">
             <p className="text-base text-left font-bold my-2"></p>
