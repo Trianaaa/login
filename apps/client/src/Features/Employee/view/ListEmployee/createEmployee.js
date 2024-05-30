@@ -19,6 +19,7 @@ const EmployeeForm = ({ onClose }) => {
     direccion: "",
     cargo: "",
     salario: 0,
+    id: 0,
   });
 
   const handleChange = (e) => {
@@ -42,7 +43,7 @@ const EmployeeForm = ({ onClose }) => {
           Direccion: formValues.direccion,
           Cargo: formValues.cargo,
           Salario: Number(formValues.salario),
-          id: 1,
+          id: Number(formValues.id),
         }),
       });
     } catch (err) {
@@ -63,12 +64,12 @@ const EmployeeForm = ({ onClose }) => {
   };
 
   return (
-    <Box maxW="md" mx="auto" my={8} py={4}>
+    <Box maxW="auto" mx="auto" my={6} py={2}>
       <Heading mb={6} textAlign="center">
         Formulario de Empleado
       </Heading>
       <form onSubmit={handleSubmit}>
-        <Stack spacing={4}>
+        <Stack spacing={2}>
           <FormControl id="nombre" isRequired>
             <FormLabel>Nombre</FormLabel>
             <Input
@@ -89,7 +90,17 @@ const EmployeeForm = ({ onClose }) => {
             />
           </FormControl>
 
-          <FormControl id="foto">
+          <FormControl id="id" isRequired>
+            <FormLabel>Cedula</FormLabel>
+            <Input
+              type="number"
+              name="id"
+              value={formValues.id}
+              onChange={handleChange}
+            />
+          </FormControl>
+
+          <FormControl id="foto" isRequired>
             <FormLabel>Foto</FormLabel>
             <Input
               type="text"
@@ -109,7 +120,7 @@ const EmployeeForm = ({ onClose }) => {
             />
           </FormControl>
 
-          <FormControl id="direccion">
+          <FormControl id="direccion" isRequired>
             <FormLabel>Dirección</FormLabel>
             <Input
               type="text"
@@ -141,7 +152,7 @@ const EmployeeForm = ({ onClose }) => {
 
           <Button
             type="submit"
-            colorScheme="teal"
+            colorScheme="green"
             size="md"
             onClick={handleSubmit}
           >
