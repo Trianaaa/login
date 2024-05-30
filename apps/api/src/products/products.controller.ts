@@ -17,7 +17,7 @@ import { Products } from './schemas/products.schemas';
 
 @Controller('Products')
 export class ProductsController {
-  constructor(private ProductsService: ProductsService) { }
+  constructor(private ProductsService: ProductsService) {}
 
   @Get()
   async getAllProducts(@Query() query: ExpressQuery): Promise<Products[]> {
