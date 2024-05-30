@@ -2,6 +2,9 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateEmployeeDto {
   @IsOptional()
+  @IsNumber()
+  readonly id: number;
+  @IsOptional()
   @IsString()
   readonly Nombre: string;
   @IsOptional()
