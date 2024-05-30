@@ -10,7 +10,7 @@ export const DEFAULT_DATA = [
     Correo: "tanner@linsley.com",
     Cargo: "Director",
     Salario: 100000,
-    Dirección: "Calle de la Paz, 12",
+    Direccion: "Calle de la Paz, 12",
   },
   {
     ID: 2,
@@ -20,7 +20,7 @@ export const DEFAULT_DATA = [
     Correo: "tanner@linsley.com",
     Cargo: "Director",
     Salario: 100000,
-    Dirección: "Calle de la Paz, 12",
+    Direccion: "Calle de la Paz, 12",
   },
   {
     ID: 3,
@@ -30,7 +30,7 @@ export const DEFAULT_DATA = [
     Correo: "tanner@linsley.com",
     Cargo: "Director",
     Salario: 100000,
-    Dirección: "Calle de la Paz, 12",
+    Direccion: "Calle de la Paz, 12",
   },
 ];
 
@@ -53,8 +53,10 @@ export const columns = [
       </Button>
     ),
   }),
-  columnHelper.accessor("ID", {
-    cell: (info) => info.getValue(),
+  columnHelper.display({
+    id: "ID",
+    header: () => "ID",
+    cell: (info) => info.row.original._id,
   }),
   columnHelper.accessor("Foto", {
     cell: (info) => (
@@ -88,7 +90,7 @@ export const columns = [
       return formatter.format(info.getValue());
     },
   }),
-  columnHelper.accessor("Dirección", {
+  columnHelper.accessor("Direccion", {
     header: "Dirección",
   }),
 ];

@@ -11,7 +11,7 @@ const ListEmployee = () => {
   const getEmployees = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("localhost:3002/api/employee");
+      const res = await fetch("http://localhost:3002/employee");
       const data = await res.json();
       setData(data);
     } catch (error) {
