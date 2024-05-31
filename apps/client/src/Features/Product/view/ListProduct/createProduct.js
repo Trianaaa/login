@@ -192,10 +192,11 @@ const ProductsForm = ({ onClose }) => {
               name="id_Empleado"
               value={formValues.id_Empleado}
               onChange={handleChange}
+              placeholder="Selecciona un empleado" // Añadir un placeholder
             >
               {employees.map((employee) => (
                 <option key={employee._id} value={employee._id}>
-                  {employee.Nombre}
+                  {employee.Nombre} {employee.Apellido}
                 </option>
               ))}
             </Select>
