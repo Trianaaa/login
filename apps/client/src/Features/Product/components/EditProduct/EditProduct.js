@@ -165,7 +165,7 @@ const EditProduct = ({ values, onSubmit }) => {
                 size="md"
                 onClick={handleSubmit}
               >
-                Enviar
+                Editar
               </Button>
             </Stack>
           </form>
