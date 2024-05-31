@@ -10,9 +10,9 @@ const columnHelper = createColumnHelper();
 
 export const columns = [
   columnHelper.display({
-    id: "ID",
+    id: "id_Serial",
     header: () => "Serial",
-    cell: (info) => info.row.original._id,
+    cell: (info) => info.row.original.id_Serial,
   }),
   columnHelper.accessor("Imagen", {
     cell: (info) => (
