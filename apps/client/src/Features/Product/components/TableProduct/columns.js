@@ -44,7 +44,8 @@ export const columns = [
     header: "Fabricante",
   }),
   columnHelper.accessor("id_Empleado", {
-    header: "id_Empleado",
+    header: "Empleado",
+    cell: (info) => info.getValue(),
   }),
   columnHelper.display({
     id: "Edit",
