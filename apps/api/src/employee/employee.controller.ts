@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
   Controller,
@@ -7,12 +8,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { EmployeeService } from './employee.service';
-import { Employee } from './schemas/Employee.schemas';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Query } from '@nestjs/common/decorators';
 import { Query as ExpressQuery } from 'express-serve-static-core';
+import { CreateEmployeeDto } from './dto/create-employee.dto';
+import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import { EmployeeService } from './employee.service';
+import { Employee } from './schemas/Employee.schemas';
 
 @Controller('Employee')
 export class EmployeeController {

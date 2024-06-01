@@ -1,6 +1,9 @@
-import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateEmployeeDto {
+  @IsNotEmpty()
+  @IsNumber()
+  readonly id: number;
   @IsNotEmpty()
   @IsString()
   readonly Nombre: string;

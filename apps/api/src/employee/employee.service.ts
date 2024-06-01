@@ -4,9 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Query } from 'express-serve-static-core';
 import * as mongoose from 'mongoose';
 import { Employee } from './schemas/employee.schemas';
-import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class EmployeeService {
@@ -30,8 +30,7 @@ export class EmployeeService {
         }
       : {};
 
-    const Employees = await this.EmployeeModel
-      .find({ ...keyword })
+    const Employees = await this.EmployeeModel.find({ ...keyword })
       .limit(resPerPage)
       .skip(skip);
     return Employees;
