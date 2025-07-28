@@ -32,7 +32,7 @@ const ProductsForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://localhost:3002/products/new", {
+      await fetch("https://api-service-3s0x.onrender.com/products/new", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ const ProductsForm = ({ onClose }) => {
   const getEmployees = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:3002/employee");
+      const res = await fetch("https://api-service-3s0x.onrender.com/employee");
       const data = await res.json();
       setEmployees(data);
     } catch (error) {

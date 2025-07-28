@@ -14,7 +14,7 @@ const ListProduct = () => {
   const getProduct = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:3002/products");
+      const res = await fetch("https://api-service-3s0x.onrender.com/products");
       const data = await res.json();
       setData(data);
     } catch (error) {

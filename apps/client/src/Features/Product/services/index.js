@@ -1,6 +1,6 @@
 export const getProduct = async (setData) => {
   try {
-    const res = await fetch("http://localhost:3002/products");
+    const res = await fetch("https://api-service-3s0x.onrender.com/products");
     const data = await res.json();
     setData(data);
   } catch (error) {
@@ -11,7 +11,7 @@ export const getProduct = async (setData) => {
 
 export const updateProduct = async (product, setData) => {
   try {
-    await fetch(`http://localhost:3002/products/${product._id}`, {
+    await fetch(`https://api-service-3s0x.onrender.com/products/${product._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +26,7 @@ export const updateProduct = async (product, setData) => {
 
 export const deleteProduct = (productId, setData) => async () => {
   try {
-    await fetch(`http://localhost:3002/products/${productId}`, {
+    await fetch(`https://api-service-3s0x.onrender.com/products/${productId}`, {
       method: "DELETE",
     });
     getProduct(setData);

@@ -30,7 +30,7 @@ const EmployeeForm = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch("http://localhost:3002/employee/new", {
+      await fetch("https://api-service-3s0x.onrender.com/employee/new", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
