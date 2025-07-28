@@ -9,7 +9,10 @@ async function bootstrap() {
 
   // Configura CORS
   app.enableCors({
-    origin: 'http://localhost:3000', // Reemplaza con la URL de tu aplicación frontend
+    origin: [
+      'http://localhost:3000',
+      'https://login-client-mep6.vercel.app', // ✅ AÑADE AQUÍ tu dominio de Vercel
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
