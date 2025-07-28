@@ -36,7 +36,7 @@ const EditProduct = ({ values, onSubmit }) => {
   const getEmployees = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://localhost:3002/employee");
+      const res = await fetch("https://api-service-3s0x.onrender.com/employee");
       const data = await res.json();
       setEmployees(data);
     } catch (error) {
