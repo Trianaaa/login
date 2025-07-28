@@ -41,3 +41,28 @@ apps/client/.next
 node_modules
 /node_modules/
 /node_modules
+
+# Turbo
+.turbo
+
+# Vscode
+.vscode
+
+# Next.js
+.next
+
+# ALL NODEMODULES
+node_modules
+node_modules/*
+node_modules/**/*
+/node_modules/
+/node_modules
+
+# ALL NODEMODULES IN THE ROOT
+node_modules
+node_modules/*
+node_modules/**/*
+
+# ALL NODEMODULES IN THE ROOT
+package-lock.json
+package-lock.json
