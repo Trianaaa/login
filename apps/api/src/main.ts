@@ -21,7 +21,7 @@ async function bootstrap() {
   // Configuración CORS más restrictiva
   app.enableCors({
     origin: process.env.NODE_ENV === 'production' 
-      ? ['https://tu-dominio-frontend.com'] // Reemplaza con tu dominio real
+      ? ['https://login-client-mep6.vercel.app'] // Tu frontend en Vercel
       : ['http://localhost:3000'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
@@ -29,9 +29,11 @@ async function bootstrap() {
   });
 
   const port = process.env.PORT || 3002;
-  await app.listen(port);
+  // IMPORTANTE: Vincular a 0.0.0.0 para Render
+  await app.listen(port, '0.0.0.0');
   
   console.log(`🚀 API running on port ${port}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+  console.log(`🔗 CORS origin: ${process.env.NODE_ENV === 'production' ? 'https://login-client-mep6.vercel.app' : 'http://localhost:3000'}`);
 }
 bootstrap();
