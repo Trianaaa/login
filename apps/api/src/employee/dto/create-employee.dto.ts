@@ -1,28 +1,41 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString, IsUrl, MinLength, MaxLength } from 'class-validator';
 
 export class CreateEmployeeDto {
-  @IsNotEmpty()
   @IsNumber()
-  readonly id: number;
   @IsNotEmpty()
+  id: number;
+
   @IsString()
-  readonly Nombre: string;
   @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(50)
+  Nombre: string;
+
   @IsString()
-  readonly Apellido: string;
   @IsNotEmpty()
+  @MinLength(2)
+  @MaxLength(50)
+  Apellido: string;
+
+  @IsUrl()
+  @IsNotEmpty()
+  Foto: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  Correo: string;
+
   @IsString()
-  readonly Foto: string;
   @IsNotEmpty()
+  @MaxLength(200)
+  Direccion: string;
+
   @IsString()
-  readonly Correo: string;
   @IsNotEmpty()
-  @IsString()
-  readonly Direccion: string;
-  @IsNotEmpty()
-  @IsString()
-  readonly Cargo: string;
-  @IsNotEmpty()
+  @MaxLength(100)
+  Cargo: string;
+
   @IsNumber()
-  readonly Salario: number;
+  @IsNotEmpty()
+  Salario: number;
 }

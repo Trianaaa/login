@@ -25,7 +25,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
+.env.production
+.env.development
+apps/api/.env
+apps/client/.env
 
 # vercel
 .vercel
@@ -66,3 +71,33 @@ node_modules/**/*
 # ALL NODEMODULES IN THE ROOT
 package-lock.json
 package-lock.json
+
+# Security - Environment files
+*.env
+.env*
+!.env.example
+!.env.template
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
