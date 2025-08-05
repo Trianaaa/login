@@ -69,10 +69,33 @@ export class ProductsService {
   }
 
   async updateById(id: string, products: Products): Promise<Products> {
-    return await this.ProductsModel.findByIdAndUpdate(id, products, {
+    // Validar que el ID del producto sea válido
+    const isValidId = mongoose.isValidObjectId(id);
+    if (!isValidId) {
+      throw new BadRequestException('Please enter correct product id.');
+    }
+
+    // Si se proporciona id_Empleado, validar que existe
+    if (products.id_Empleado) {
+      const validatedUser = await this.EmployeeModel.findById(
+        products.id_Empleado,
+      );
+
+      if (validatedUser === null) {
+        throw new BadRequestException('Please enter correct id_empleado.');
+      }
+    }
+
+    const updatedProduct = await this.ProductsModel.findByIdAndUpdate(id, products, {
       new: true,
       runValidators: true,
     });
+
+    if (!updatedProduct) {
+      throw new NotFoundException('Product not found.');
+    }
+
+    return updatedProduct;
   }
 
   async deleteById(id: string): Promise<Products> {

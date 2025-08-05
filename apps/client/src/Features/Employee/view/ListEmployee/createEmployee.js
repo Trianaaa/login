@@ -28,6 +28,7 @@ import {
   ModalFooter,
   Divider,
   useColorModeValue,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -44,10 +45,12 @@ import {
   FiPlus
 } from "react-icons/fi";
 import useStoreEmployee from "../../store";
+import { API_BASE_URL } from '@/config/api';
 
 const CreateEmployee = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { setData, data } = useStoreEmployee();
+  const { colorMode } = useColorMode();
   
   const [formValues, setFormValues] = useState({
     nombre: "",
@@ -62,9 +65,17 @@ const CreateEmployee = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Color mode values
+  // Enhanced color mode values
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
+  const textColor = useColorModeValue("gray.700", "gray.200");
+  const labelColor = useColorModeValue("gray.700", "gray.300");
+  const placeholderColor = useColorModeValue("gray.400", "gray.500");
+  const headerBg = useColorModeValue("gray.50", "gray.700");
+  const inputBg = useColorModeValue("white", "gray.700");
+  const iconColor = useColorModeValue("gray.400", "gray.500");
+  const buttonBg = useColorModeValue("green.500", "green.600");
+  const buttonHoverBg = useColorModeValue("green.600", "green.700");
 
   const handleChange = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
@@ -96,7 +107,7 @@ const CreateEmployee = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch("https://api-service-3s0x.onrender.com/employee/new", {
+      const response = await fetch(`${API_BASE_URL}/Employee/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,11 +132,12 @@ const CreateEmployee = () => {
         resetForm();
         onClose();
       } else {
-        throw new Error("Error al crear el empleado");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al crear el empleado");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Error al crear el empleado");
+      toast.error(err.message || "Error al crear el empleado");
     } finally {
       setIsLoading(false);
     }
@@ -140,61 +152,75 @@ const CreateEmployee = () => {
 
   return (
     <>
-      {/* Trigger Button */}
+      {/* Trigger Button with Dark Mode Support */}
       <Button
         leftIcon={<FiPlus />}
         onClick={onOpen}
-        colorScheme="green"
+        bg={buttonBg}
+        color="white"
         size="lg"
         shadow="md"
         _hover={{
+          bg: buttonHoverBg,
           transform: "translateY(-2px)",
           shadow: "lg",
+        }}
+        _active={{
+          transform: "translateY(0)",
         }}
         transition="all 0.2s"
       >
         Nuevo Empleado
       </Button>
 
-      {/* Modal */}
+      {/* Modal with Dark Mode Support */}
       <CommonModal isOpen={isOpen} onClose={handleClose} size="4xl">
-        <ModalHeader>
+        <ModalHeader
+          bg={headerBg}
+          borderBottom="1px solid"
+          borderColor={borderColor}
+          borderTopRadius="md"
+        >
           <HStack spacing={3}>
-            <Icon as={FiUser} boxSize={6} color="green.500" />
+            <Icon as={FiUser} boxSize={6} color={buttonBg} />
             <VStack align="start" spacing={0}>
-              <Heading size="lg" color="gray.700">
+              <Heading size="lg" color={textColor}>
                 Nuevo Empleado
               </Heading>
-              <Text color="gray.500" fontSize="sm" fontWeight="normal">
+              <Text color={placeholderColor} fontSize="sm" fontWeight="normal">
                 Completa la información del nuevo empleado
               </Text>
             </VStack>
           </HStack>
         </ModalHeader>
         
-        <ModalCloseButton />
+        <ModalCloseButton color={textColor} />
         
-        <ModalBody>
+        <ModalBody bg={bgColor} py={6}>
           <Box as="form" onSubmit={handleSubmit}>
             <VStack spacing={6}>
               <Grid templateColumns={`repeat(${gridColumns}, 1fr)`} gap={4} width="100%">
                 {/* Nombre */}
                 <GridItem>
                   <FormControl isRequired>
-                    <FormLabel color="gray.700" fontWeight="medium">
+                    <FormLabel color={labelColor} fontWeight="medium" fontSize="sm">
                       Nombre
                     </FormLabel>
                     <InputGroup>
                       <InputLeftElement>
-                        <Icon as={FiUser} color="gray.400" />
+                        <Icon as={FiUser} color={iconColor} />
                       </InputLeftElement>
                       <Input
                         name="nombre"
                         value={formValues.nombre}
                         onChange={handleChange}
                         placeholder="Ingresa el nombre"
-                        focusBorderColor="green.400"
+                        focusBorderColor={buttonBg}
                         borderColor={borderColor}
+                        bg={inputBg}
+                        color={textColor}
+                        _placeholder={{ color: placeholderColor }}
+                        _hover={{ borderColor: useColorModeValue("gray.300", "gray.500") }}
                       />
                     </InputGroup>
                   </FormControl>
@@ -203,20 +229,24 @@ const CreateEmployee = () => {
                 {/* Apellido */}
                 <GridItem>
                   <FormControl isRequired>
-                    <FormLabel color="gray.700" fontWeight="medium">
+                    <FormLabel color={labelColor} fontWeight="medium" fontSize="sm">
                       Apellido
                     </FormLabel>
                     <InputGroup>
                       <InputLeftElement>
-                        <Icon as={FiUser} color="gray.400" />
+                        <Icon as={FiUser} color={iconColor} />
                       </InputLeftElement>
                       <Input
                         name="apellido"
                         value={formValues.apellido}
                         onChange={handleChange}
                         placeholder="Ingresa el apellido"
-                        focusBorderColor="green.400"
+                        focusBorderColor={buttonBg}
                         borderColor={borderColor}
+                        bg={inputBg}
+                        color={textColor}
+                        _placeholder={{ color: placeholderColor }}
+                        _hover={{ borderColor: useColorModeValue("gray.300", "gray.500") }}
                       />
                     </InputGroup>
                   </FormControl>
@@ -225,23 +255,27 @@ const CreateEmployee = () => {
                 {/* Cédula */}
                 <GridItem>
                   <FormControl isRequired>
-                    <FormLabel color="gray.700" fontWeight="medium">
+                    <FormLabel color={labelColor} fontWeight="medium" fontSize="sm">
                       Cédula
                     </FormLabel>
                     <InputGroup>
                       <InputLeftElement>
-                        <Icon as={FiCreditCard} color="gray.400" />
+                        <Icon as={FiCreditCard} color={iconColor} />
                       </InputLeftElement>
                       <NumberInput
                         value={formValues.id}
                         onChange={handleIdChange}
                         min={0}
-                        focusBorderColor="green.400"
+                        focusBorderColor={buttonBg}
                       >
                         <NumberInputField 
                           pl={10} 
                           placeholder="Número de cédula"
                           borderColor={borderColor}
+                          bg={inputBg}
+                          color={textColor}
+                          _placeholder={{ color: placeholderColor }}
+                          _hover={{ borderColor: useColorModeValue("gray.300", "gray.500") }}
                         />
                       </NumberInput>
                     </InputGroup>
@@ -251,12 +285,12 @@ const CreateEmployee = () => {
                 {/* Correo */}
                 <GridItem>
                   <FormControl isRequired>
-                    <FormLabel color="gray.700" fontWeight="medium">
+                    <FormLabel color={labelColor} fontWeight="medium" fontSize="sm">
                       Correo Electrónico
                     </FormLabel>
                     <InputGroup>
                       <InputLeftElement>
-                        <Icon as={FiMail} color="gray.400" />
+                        <Icon as={FiMail} color={iconColor} />
                       </InputLeftElement>
                       <Input
                         type="email"
@@ -264,8 +298,12 @@ const CreateEmployee = () => {
                         value={formValues.correo}
                         onChange={handleChange}
                         placeholder="correo@empresa.com"
-                        focusBorderColor="green.400"
+                        focusBorderColor={buttonBg}
                         borderColor={borderColor}
+                        bg={inputBg}
+                        color={textColor}
+                        _placeholder={{ color: placeholderColor }}
+                        _hover={{ borderColor: useColorModeValue("gray.300", "gray.500") }}
                       />
                     </InputGroup>
                   </FormControl>
@@ -274,20 +312,24 @@ const CreateEmployee = () => {
                 {/* Cargo */}
                 <GridItem>
                   <FormControl isRequired>
-                    <FormLabel color="gray.700" fontWeight="medium">
+                    <FormLabel color={labelColor} fontWeight="medium" fontSize="sm">
                       Cargo
                     </FormLabel>
                     <InputGroup>
                       <InputLeftElement>
-                        <Icon as={FiBriefcase} color="gray.400" />
+                        <Icon as={FiBriefcase} color={iconColor} />
                       </InputLeftElement>
                       <Input
                         name="cargo"
                         value={formValues.cargo}
                         onChange={handleChange}
                         placeholder="Ej: Desarrollador Frontend"
-                        focusBorderColor="green.400"
+                        focusBorderColor={buttonBg}
                         borderColor={borderColor}
+                        bg={inputBg}
+                        color={textColor}
+                        _placeholder={{ color: placeholderColor }}
+                        _hover={{ borderColor: useColorModeValue("gray.300", "gray.500") }}
                       />
                     </InputGroup>
                   </FormControl>
@@ -296,27 +338,31 @@ const CreateEmployee = () => {
                 {/* Salario */}
                 <GridItem>
                   <FormControl isRequired>
-                    <FormLabel color="gray.700" fontWeight="medium">
+                    <FormLabel color={labelColor} fontWeight="medium" fontSize="sm">
                       Salario
                     </FormLabel>
                     <InputGroup>
                       <InputLeftElement>
-                        <Icon as={FiDollarSign} color="gray.400" />
+                        <Icon as={FiDollarSign} color={iconColor} />
                       </InputLeftElement>
                       <NumberInput
                         value={formValues.salario}
                         onChange={handleSalarioChange}
                         min={0}
-                        focusBorderColor="green.400"
+                        focusBorderColor={buttonBg}
                       >
                         <NumberInputField 
                           pl={10} 
                           placeholder="0"
                           borderColor={borderColor}
+                          bg={inputBg}
+                          color={textColor}
+                          _placeholder={{ color: placeholderColor }}
+                          _hover={{ borderColor: useColorModeValue("gray.300", "gray.500") }}
                         />
                         <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
+                          <NumberIncrementStepper color={textColor} />
+                          <NumberDecrementStepper color={textColor} />
                         </NumberInputStepper>
                       </NumberInput>
                     </InputGroup>
@@ -324,22 +370,28 @@ const CreateEmployee = () => {
                 </GridItem>
               </Grid>
 
+              <Divider borderColor={borderColor} />
+
               {/* Dirección - Full width */}
               <FormControl isRequired>
-                <FormLabel color="gray.700" fontWeight="medium">
+                <FormLabel color={labelColor} fontWeight="medium" fontSize="sm">
                   Dirección
                 </FormLabel>
                 <InputGroup>
                   <InputLeftElement>
-                    <Icon as={FiMapPin} color="gray.400" />
+                    <Icon as={FiMapPin} color={iconColor} />
                   </InputLeftElement>
                   <Textarea
                     name="direccion"
                     value={formValues.direccion}
                     onChange={handleChange}
                     placeholder="Dirección completa del empleado"
-                    focusBorderColor="green.400"
+                    focusBorderColor={buttonBg}
                     borderColor={borderColor}
+                    bg={inputBg}
+                    color={textColor}
+                    _placeholder={{ color: placeholderColor }}
+                    _hover={{ borderColor: useColorModeValue("gray.300", "gray.500") }}
                     pl={10}
                     rows={2}
                     resize="vertical"
@@ -349,20 +401,24 @@ const CreateEmployee = () => {
 
               {/* Foto URL */}
               <FormControl>
-                <FormLabel color="gray.700" fontWeight="medium">
+                <FormLabel color={labelColor} fontWeight="medium" fontSize="sm">
                   URL de la Foto (Opcional)
                 </FormLabel>
                 <InputGroup>
                   <InputLeftElement>
-                    <Icon as={FiImage} color="gray.400" />
+                    <Icon as={FiImage} color={iconColor} />
                   </InputLeftElement>
                   <Input
                     name="foto"
                     value={formValues.foto}
                     onChange={handleChange}
                     placeholder="https://ejemplo.com/foto.jpg"
-                    focusBorderColor="green.400"
+                    focusBorderColor={buttonBg}
                     borderColor={borderColor}
+                    bg={inputBg}
+                    color={textColor}
+                    _placeholder={{ color: placeholderColor }}
+                    _hover={{ borderColor: useColorModeValue("gray.300", "gray.500") }}
                   />
                 </InputGroup>
               </FormControl>
@@ -370,7 +426,12 @@ const CreateEmployee = () => {
           </Box>
         </ModalBody>
 
-        <ModalFooter>
+        <ModalFooter
+          bg={headerBg}
+          borderTop="1px solid"
+          borderColor={borderColor}
+          borderBottomRadius="md"
+        >
           <HStack spacing={3} width="100%" justify="end">
             <Button
               variant="outline"
@@ -379,17 +440,33 @@ const CreateEmployee = () => {
               size="lg"
               minW="120px"
               isDisabled={isLoading}
+              borderColor={borderColor}
+              color={textColor}
+              _hover={{
+                bg: useColorModeValue("gray.50", "gray.600"),
+                borderColor: useColorModeValue("gray.300", "gray.500"),
+              }}
             >
               Cancelar
             </Button>
             <Button
               onClick={handleSubmit}
-              colorScheme="green"
+              bg={buttonBg}
+              color="white"
               leftIcon={<FiSave />}
               isLoading={isLoading}
               loadingText="Guardando..."
               size="lg"
               minW="120px"
+              _hover={{
+                bg: buttonHoverBg,
+                transform: "translateY(-1px)",
+                shadow: "lg",
+              }}
+              _active={{
+                transform: "translateY(0)",
+              }}
+              transition="all 0.2s"
             >
               Guardar Empleado
             </Button>

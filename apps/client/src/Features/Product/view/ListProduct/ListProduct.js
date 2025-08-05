@@ -1,5 +1,7 @@
 import CommonModal from "@/Components/CommonModal";
+import DeleteConfirm from "@/Components/DeleteConfirm";
 import {
+  Avatar,
   Box,
   Button,
   VStack,
@@ -18,7 +20,9 @@ import {
   Image,
   Divider,
   useColorModeValue,
+  useColorMode,
   Skeleton,
+  SkeletonCircle,
   SkeletonText,
   Alert,
   AlertIcon,
@@ -69,8 +73,16 @@ import {
   HiPencil,
   HiTrash,
   HiPhotograph,
+  HiSun,
+  HiMoon,
+  HiShoppingBag,
 } from "react-icons/hi";
 import CreateProduct from "./createProduct";
+import ViewProduct from "../../components/ViewProduct";
+import EditProduct from "../../components/EditProduct";
+import { deleteProduct, updateProduct } from "../../services";
+
+import { API_BASE_URL } from '@/config/api';
 
 const ListProduct = () => {
   const router = useRouter();
@@ -84,6 +96,9 @@ const ListProduct = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [selectedFilters, setSelectedFilters] = useState([]);
   const { isOpen: isFilterOpen, onToggle: onFilterToggle } = useDisclosure();
+  
+  // Dark mode hook
+  const { colorMode, toggleColorMode } = useColorMode();
 
   // Responsive values
   const columns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4 });
@@ -91,17 +106,17 @@ const ListProduct = () => {
   const cardPadding = useBreakpointValue({ base: 4, md: 6 });
   const headerSize = useBreakpointValue({ base: "lg", md: "xl" });
 
-  // Color mode values
+  // Color mode values - EXACTAMENTE IGUALES A EMPLEADOS
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const textColor = useColorModeValue("gray.600", "gray.300");
-  const statsBg = useColorModeValue("purple.50", "purple.900");
+  const statsBg = useColorModeValue("blue.50", "blue.900");
 
   const getProducts = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("https://api-service-3s0x.onrender.com/products");
+      const res = await fetch(`${API_BASE_URL}/products`);
       const data = await res.json();
       setProducts(data);
     } catch (error) {
@@ -167,6 +182,16 @@ const ListProduct = () => {
     setFilterMarca("");
   };
 
+  // Función para manejar la eliminación de productos
+  const handleDeleteProduct = (productId) => {
+    deleteProduct(productId, setProducts);
+  };
+
+  // Función para manejar la edición de productos
+  const handleEditProduct = (updatedProduct) => {
+    updateProduct(updatedProduct, setProducts);
+  };
+
   const ProductCard = ({ product }) => (
     <Card 
       bg={cardBg} 
@@ -178,125 +203,83 @@ const ListProduct = () => {
       _hover={{ 
         transform: "translateY(-4px)", 
         shadow: "xl",
-        borderColor: "purple.300"
+        borderColor: "blue.300"
       }}
       cursor="pointer"
     >
       <CardHeader pb={2}>
-        <VStack spacing={3}>
-          <AspectRatio ratio={16/9} w="full">
-            <Image 
-              src={product.Imagen || "/placeholder-product.jpg"}
-              alt={product.Nombre}
-              borderRadius="lg"
-              objectFit="cover"
-              fallback={
-                <Flex 
-                  align="center" 
-                  justify="center" 
-                  bg="gray.100" 
-                  borderRadius="lg"
-                  h="full"
-                >
-                  <HiPhotograph size="40px" color="gray.400" />
-                </Flex>
-              }
-            />
-          </AspectRatio>
-          
-          <HStack justify="space-between" w="full">
-            <VStack align="start" spacing={1} flex={1}>
-              <Text fontWeight="bold" fontSize="lg" noOfLines={1}>
-                {product.Nombre}
-              </Text>
-              <HStack spacing={2}>
-                <Badge 
-                  colorScheme="purple" 
-                  variant="subtle" 
-                  borderRadius="full"
-                  px={3}
-                  py={1}
-                >
-                  {product.Categoria}
-                </Badge>
-                <Badge 
-                  colorScheme="blue" 
-                  variant="outline" 
-                  borderRadius="full"
-                  px={2}
-                  py={1}
-                  fontSize="xs"
-                >
-                  {product.Marca}
-                </Badge>
-              </HStack>
-            </VStack>
-            
-            <Menu>
-              <MenuButton
-                as={IconButton}
-                icon={<HiChevronDown />}
-                variant="ghost"
-                size="sm"
-              />
-              <MenuList>
-                <MenuItem icon={<HiEye />}>Ver Detalles</MenuItem>
-                <MenuItem icon={<HiPencil />}>Editar</MenuItem>
-                <MenuDivider />
-                <MenuItem icon={<HiTrash />} color="red.500">Eliminar</MenuItem>
-              </MenuList>
-            </Menu>
-          </HStack>
-        </VStack>
+        <HStack spacing={4}>
+          <Avatar 
+            size="lg" 
+            src={product.Imagen}
+            name={product.Nombre}
+            bg="blue.500"
+            icon={<HiCube />}
+          />
+          <VStack align="start" flex={1} spacing={1}>
+            <Heading size="md" color="blue.600" noOfLines={1}>
+              {product.Nombre}
+            </Heading>
+            <Text fontSize="sm" color={textColor} noOfLines={1}>
+              {product.Categoria} • {product.Marca}
+            </Text>
+            <HStack spacing={2}>
+              <Badge colorScheme="blue" variant="subtle">
+                {product.Categoria}
+              </Badge>
+              <Badge colorScheme="purple" variant="outline">
+                {product.Marca}
+              </Badge>
+            </HStack>
+          </VStack>
+        </HStack>
       </CardHeader>
-      
+
       <CardBody pt={0}>
-        <VStack align="start" spacing={3}>
-          <HStack spacing={2} w="full">
-            <HiIdentification color="gray.500" />
-            <Text fontSize="sm" color={textColor} noOfLines={1} flex={1}>
-              Modelo: {product.Modelo}
-            </Text>
-          </HStack>
-          
-          <HStack spacing={2} w="full">
-            <HiTag color="gray.500" />
-            <Text fontSize="sm" color={textColor} noOfLines={1} flex={1}>
-              Serie: {product.Serie}
-            </Text>
-          </HStack>
-          
-          <HStack spacing={2} w="full">
-            <HiOfficeBuilding color="gray.500" />
-            <Text fontSize="sm" color={textColor} noOfLines={1} flex={1}>
-              {product.Fabricante}
-            </Text>
-          </HStack>
-          
+        <VStack spacing={3} align="stretch">
           <Divider />
           
-          <HStack justify="space-between" w="full">
-            <Text fontSize="xs" color={textColor}>
-              Serial: {product.id_Serial?.slice(-6)}
-            </Text>
-            <HStack spacing={1}>
-              <Tooltip label="Ver detalles">
-                <IconButton
-                  icon={<HiEye />}
-                  size="xs"
-                  variant="ghost"
-                  colorScheme="purple"
-                />
-              </Tooltip>
-              <Tooltip label="Editar">
-                <IconButton
-                  icon={<HiPencil />}
-                  size="xs"
-                  variant="ghost"
-                  colorScheme="green"
-                />
-              </Tooltip>
+          <VStack spacing={2} align="start">
+            <HStack justify="space-between" w="full">
+              <HStack spacing={2}>
+                <HiIdentification color="gray.400" />
+                <Text fontSize="sm" color={textColor}>
+                  <strong>Modelo:</strong> {product.Modelo || "N/A"}
+                </Text>
+              </HStack>
             </HStack>
+            
+            <HStack justify="space-between" w="full">
+              <HStack spacing={2}>
+                <HiTag color="gray.400" />
+                <Text fontSize="sm" color={textColor}>
+                  <strong>Serie:</strong> {product.Serie || "N/A"}
+                </Text>
+              </HStack>
+            </HStack>
+          </VStack>
+
+          <Divider />
+
+          <HStack justify="space-between" align="center">
+            <HStack spacing={1}>
+              <ViewProduct product={product} />
+              
+              <EditProduct 
+                product={product} 
+                onSubmit={handleEditProduct}
+              />
+            </HStack>
+
+            <Tooltip label="Eliminar">
+              <Box>
+                <DeleteConfirm
+                  title="Eliminar Producto"
+                  message={`¿Está seguro que desea eliminar ${product.Nombre}?`}
+                  onDelete={() => handleDeleteProduct(product._id)}
+                />
+              </Box>
+            </Tooltip>
           </HStack>
         </VStack>
       </CardBody>
@@ -306,13 +289,14 @@ const ListProduct = () => {
   const SkeletonCard = () => (
     <Card bg={cardBg} borderRadius="xl" p={cardPadding}>
       <VStack spacing={4}>
-        <Skeleton height="150px" borderRadius="lg" />
-        <VStack align="start" w="full" spacing={2}>
-          <Skeleton height="20px" width="80%" />
-          <Skeleton height="16px" width="60%" />
-          <Skeleton height="16px" width="40%" />
-        </VStack>
-        <SkeletonText mt="4" noOfLines={2} spacing="4" skeletonHeight="2" />
+        <HStack spacing={4} w="full">
+          <SkeletonCircle size="16" />
+          <VStack align="start" flex={1}>
+            <Skeleton height="20px" width="60%" />
+            <Skeleton height="16px" width="40%" />
+          </VStack>
+        </HStack>
+        <SkeletonText mt="4" noOfLines={3} spacing="4" skeletonHeight="2" />
       </VStack>
     </Card>
   );
@@ -333,7 +317,7 @@ const ListProduct = () => {
               <VStack align={{ base: "center", md: "start" }} spacing={2}>
                 <Heading 
                   size={headerSize} 
-                  color="purple.600"
+                  color="blue.600"
                   display="flex"
                   alignItems="center"
                   gap={3}
@@ -342,16 +326,31 @@ const ListProduct = () => {
                   Gestión de Productos
                 </Heading>
                 <Text color={textColor} fontSize="lg">
-                  Administra tu inventario de equipos
+                  Administra tu inventario de productos
                 </Text>
               </VStack>
 
               <HStack spacing={3} flexWrap="wrap">
+                <Tooltip label={colorMode === 'light' ? 'Modo oscuro' : 'Modo claro'}>
+                  <IconButton
+                    icon={colorMode === 'light' ? <HiMoon /> : <HiSun />}
+                    onClick={toggleColorMode}
+                    colorScheme={colorMode === 'light' ? 'purple' : 'yellow'}
+                    variant="outline"
+                    size="lg"
+                    transition="all 0.3s"
+                    _hover={{
+                      transform: "scale(1.05)",
+                      shadow: "lg"
+                    }}
+                  />
+                </Tooltip>
+                
                 <Tooltip label="Actualizar datos">
                   <IconButton
                     icon={<HiRefresh />}
                     onClick={handleRefresh}
-                    colorScheme="purple"
+                    colorScheme="blue"
                     variant="outline"
                     isLoading={isLoading}
                     size="lg"
@@ -363,7 +362,7 @@ const ListProduct = () => {
                 <Button
                   leftIcon={<HiUsers />}
                   onClick={navigateToEmployees}
-                  colorScheme="blue"
+                  colorScheme="purple"
                   variant="outline"
                   size="lg"
                 >
@@ -392,7 +391,7 @@ const ListProduct = () => {
                   <Stat>
                     <StatLabel>Categorías</StatLabel>
                     <StatNumber>{totalCategories}</StatNumber>
-                    <StatHelpText>Diferentes tipos</StatHelpText>
+                    <StatHelpText>Tipos únicos</StatHelpText>
                   </Stat>
                 </CardBody>
               </Card>
@@ -489,19 +488,19 @@ const ListProduct = () => {
                 <HStack spacing={2} flexWrap="wrap">
                   <Text fontSize="sm" color={textColor}>Filtros activos:</Text>
                   {searchTerm && (
-                    <Tag size="md" colorScheme="purple" borderRadius="full">
+                    <Tag size="md" colorScheme="blue" borderRadius="full">
                       <TagLabel>Búsqueda: {searchTerm}</TagLabel>
                       <TagCloseButton onClick={() => setSearchTerm("")} />
                     </Tag>
                   )}
                   {filterCategory && (
-                    <Tag size="md" colorScheme="blue" borderRadius="full">
+                    <Tag size="md" colorScheme="green" borderRadius="full">
                       <TagLabel>Categoría: {filterCategory}</TagLabel>
                       <TagCloseButton onClick={() => setFilterCategory("")} />
                     </Tag>
                   )}
                   {filterMarca && (
-                    <Tag size="md" colorScheme="green" borderRadius="full">
+                    <Tag size="md" colorScheme="purple" borderRadius="full">
                       <TagLabel>Marca: {filterMarca}</TagLabel>
                       <TagCloseButton onClick={() => setFilterMarca("")} />
                     </Tag>
@@ -515,6 +514,7 @@ const ListProduct = () => {
 
             <Collapse in={isFilterOpen} animateOpacity>
               <Box p={4} bg={useColorModeValue("gray.50", "gray.700")} borderRadius="lg" w="full">
+                <Text fontWeight="semibold" mb={3}>Filtros Avanzados</Text>
                 <VStack spacing={4} align="start">
                   <Text fontWeight="semibold">Filtros por Categoría</Text>
                   <Wrap spacing={2}>
@@ -523,7 +523,7 @@ const ListProduct = () => {
                         <Button
                           size="sm"
                           variant={filterCategory === category ? "solid" : "outline"}
-                          colorScheme="purple"
+                          colorScheme="blue"
                           onClick={() => setFilterCategory(filterCategory === category ? "" : category)}
                         >
                           {category}

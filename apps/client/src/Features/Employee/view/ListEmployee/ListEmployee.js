@@ -18,6 +18,7 @@ import {
   Avatar,
   Divider,
   useColorModeValue,
+  useColorMode,
   Skeleton,
   SkeletonCircle,
   SkeletonText,
@@ -69,9 +70,16 @@ import {
   HiEye,
   HiPencil,
   HiTrash,
+  HiSun,
+  HiMoon,
 } from "react-icons/hi";
 import CreateEmployee from "./createEmployee";
+import EditEmployee from "../../components/EditEmployee/EditEmployee";
+import ViewEmployee from "../../components/ViewEmployee/ViewEmployee";
+import DeleteConfirm from "@/Components/DeleteConfirm";
 import useStoreEmployee from "../../store";
+import { API_BASE_URL } from '@/config/api';
+import { updateEmployee, deleteEmployee } from "../../services";
 
 const ListEmployee = () => {
   const router = useRouter();
@@ -84,6 +92,9 @@ const ListEmployee = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [selectedFilters, setSelectedFilters] = useState([]);
   const { isOpen: isFilterOpen, onToggle: onFilterToggle } = useDisclosure();
+  
+  // Dark mode hook
+  const { colorMode, toggleColorMode } = useColorMode();
 
   // Responsive values
   const columns = useBreakpointValue({ base: 1, md: 2, lg: 3, xl: 4 });
@@ -102,7 +113,7 @@ const ListEmployee = () => {
   const getEmployees = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("https://api-service-3s0x.onrender.com/employee");
+      const res = await fetch(`${API_BASE_URL}/employee`);
       const employeeData = await res.json();
       setData(employeeData);
     } catch (error) {
@@ -183,6 +194,16 @@ const ListEmployee = () => {
     setFilterCargo("");
   };
 
+  // Función para manejar la eliminación de empleados
+  const handleDeleteEmployee = (employeeId) => {
+    deleteEmployee(employeeId, setData);
+  };
+
+  // Función para manejar la actualización de empleados
+  const handleUpdateEmployee = (employee) => {
+    updateEmployee(employee, setData);
+  };
+
   const EmployeeCard = ({ employee }) => (
     <Card 
       bg={cardBg} 
@@ -220,20 +241,6 @@ const ListEmployee = () => {
               {employee.Cargo}
             </Badge>
           </VStack>
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              icon={<HiChevronDown />}
-              variant="ghost"
-              size="sm"
-            />
-            <MenuList>
-              <MenuItem icon={<HiEye />}>Ver Detalles</MenuItem>
-              <MenuItem icon={<HiPencil />}>Editar</MenuItem>
-              <MenuDivider />
-              <MenuItem icon={<HiTrash />} color="red.500">Eliminar</MenuItem>
-            </MenuList>
-          </Menu>
         </HStack>
       </CardHeader>
       
@@ -266,22 +273,24 @@ const ListEmployee = () => {
             <Text fontSize="xs" color={textColor}>
               ID: {employee._id?.slice(-6)}
             </Text>
-            <HStack spacing={1}>
-              <Tooltip label="Ver perfil">
-                <IconButton
-                  icon={<HiEye />}
-                  size="xs"
-                  variant="ghost"
-                  colorScheme="blue"
-                />
+            <HStack spacing={2}>
+              <Tooltip>
+                <Box>
+                  <ViewEmployee employee={employee} />
+                </Box>
               </Tooltip>
-              <Tooltip label="Editar">
-                <IconButton
-                  icon={<HiPencil />}
-                  size="xs"
-                  variant="ghost"
-                  colorScheme="green"
-                />
+              <Tooltip >
+                <Box>
+                  <EditEmployee employee={employee} onSave={handleUpdateEmployee} />
+                </Box>
+              </Tooltip>
+              <Tooltip>
+                <Box>
+                  <DeleteConfirm
+                    message={`¿Está seguro que desea eliminar a ${employee.Nombre} ${employee.Apellido}?`}
+                    onDelete={() => handleDeleteEmployee(employee._id)}
+                  />
+                </Box>
               </Tooltip>
             </HStack>
           </HStack>
@@ -335,6 +344,21 @@ const ListEmployee = () => {
               </VStack>
 
               <HStack spacing={3} flexWrap="wrap">
+                <Tooltip label={colorMode === 'light' ? 'Modo oscuro' : 'Modo claro'}>
+                  <IconButton
+                    icon={colorMode === 'light' ? <HiMoon /> : <HiSun />}
+                    onClick={toggleColorMode}
+                    colorScheme={colorMode === 'light' ? 'purple' : 'yellow'}
+                    variant="outline"
+                    size="lg"
+                    transition="all 0.3s"
+                    _hover={{
+                      transform: "scale(1.05)",
+                      shadow: "lg"
+                    }}
+                  />
+                </Tooltip>
+                
                 <Tooltip label="Actualizar datos">
                   <IconButton
                     icon={<HiRefresh />}
